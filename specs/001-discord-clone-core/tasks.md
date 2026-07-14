@@ -204,7 +204,7 @@ typecheck` (zero errors) and the full Vitest suite before moving to Polish.
 
 **Purpose**: Constitution gates and final validation across all stories.
 
-- [ ] T057 [P] Run the quickstart.md validation scenarios end-to-end and record results
+- [X] T057 [P] Run the quickstart.md validation scenarios end-to-end and record results (see validation-results.md; found & fixed a DM call-controls layout bug)
 - [X] T058 [P] `npm run typecheck` (`tsc --noEmit`) across `src/` and `convex/` with zero errors (Type Safety End-to-End gate)
 - [X] T059 Cross-check every mutation/query in contracts/convex-api.md against its actual `convex/lib/authz.ts` usage — no function skips the shared authorization helper (Security Basics gate)
 - [X] T060 [P] Add in-UI messaging for call-connection failure (STUN-only/no-TURN limitation from plan.md Constraints) so strict-NAT failures are explained, not silent

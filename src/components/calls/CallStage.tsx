@@ -19,7 +19,7 @@ export function CallStage({
       : call.remoteStreams[userId as string];
 
   return (
-    <div className="flex flex-1 flex-col">
+    <div className="flex min-h-0 flex-1 flex-col">
       {call.error && (
         <div className="m-3 rounded bg-danger/20 px-3 py-2 text-sm text-danger">
           {call.error}
@@ -30,7 +30,10 @@ export function CallStage({
         </div>
       )}
       {call.connecting && <p className="p-3 text-sm text-offline">Connecting…</p>}
-      <div className="grid flex-1 auto-rows-min grid-cols-2 gap-3 overflow-y-auto p-3">
+      {/* min-h-0 lets this grid shrink inside a fixed-height parent (e.g. the
+          DM call box) so the controls row below stays pinned and clickable
+          instead of overflowing under the message list. */}
+      <div className="grid min-h-0 flex-1 auto-rows-min grid-cols-2 gap-3 overflow-y-auto p-3">
         {call.participants.map((participant) => {
           const isLocal = participant.userId === call.currentUserId;
           return (
@@ -49,7 +52,7 @@ export function CallStage({
           );
         })}
       </div>
-      <div className="border-t border-black/20">
+      <div className="shrink-0 border-t border-black/20">
         <CallControls
           micOn={call.micOn}
           cameraOn={call.cameraOn}
