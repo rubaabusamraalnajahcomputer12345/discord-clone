@@ -9,6 +9,7 @@ import { MemberList } from "../components/members/MemberList";
 import { MessageList } from "../components/messages/MessageList";
 import { MessageComposer } from "../components/messages/MessageComposer";
 import { TypingIndicator } from "../components/messages/TypingIndicator";
+import { VoiceChannelPanel } from "../components/calls/VoiceChannelPanel";
 
 export function ServerPage() {
   const params = useParams();
@@ -38,20 +39,26 @@ export function ServerPage() {
     <div className="flex h-full">
       <ServerRail />
       <ChannelList serverId={serverId} />
-      <div className="flex min-w-0 flex-1 flex-col">
-        {activeChannelId && activeChannel ? (
-          <>
+      {activeChannelId && activeChannel ? (
+        activeChannel.type === "voice" ? (
+          <VoiceChannelPanel
+            key={activeChannelId}
+            channelId={activeChannelId}
+            channelName={activeChannel.name}
+          />
+        ) : (
+          <div className="flex min-w-0 flex-1 flex-col">
             <ChannelHeader name={activeChannel.name} />
             <MessageList channelId={activeChannelId} />
             <TypingIndicator channelId={activeChannelId} />
             <MessageComposer channelId={activeChannelId} />
-          </>
-        ) : (
-          <div className="flex h-full items-center justify-center text-offline">
-            No channel selected
           </div>
-        )}
-      </div>
+        )
+      ) : (
+        <div className="flex min-w-0 flex-1 items-center justify-center text-offline">
+          No channel selected
+        </div>
+      )}
       <MemberList serverId={serverId} />
     </div>
   );

@@ -14,8 +14,13 @@ export function ChannelList({ serverId }: { serverId: Id<"servers"> }) {
   const channels = useQuery(api.channels.list, { serverId });
   const server = useQuery(api.servers.get, { serverId });
   const currentUser = useQuery(api.users.getCurrentUser);
+  const members = useQuery(api.serverMembers.list, { serverId });
   const { channelId: activeChannelId } = useParams();
   const navigate = useNavigate();
+
+  const nameByUserId = new Map(
+    (members ?? []).map((member) => [member.userId, member.displayName]),
+  );
 
   const [showInvite, setShowInvite] = useState(false);
   const [showServerSettings, setShowServerSettings] = useState(false);
@@ -26,8 +31,6 @@ export function ChannelList({ serverId }: { serverId: Id<"servers"> }) {
     server != null && currentUser != null && server.ownerId === currentUser._id;
 
   const textChannels = channels?.filter((channel) => channel.type === "text") ?? [];
-  // Voice channels are listed starting in US2; joining a call and the
-  // connected-members display (FR-032) arrive in US3 (T050).
   const voiceChannels = channels?.filter((channel) => channel.type === "voice") ?? [];
 
   return (
@@ -75,16 +78,29 @@ export function ChannelList({ serverId }: { serverId: Id<"servers"> }) {
         onCreate={() => setCreateType("voice")}
       />
       {voiceChannels.map((channel) => (
-        <ChannelRow
-          key={channel._id}
-          prefix="🔊"
-          name={channel.name}
-          active={false}
-          canManage={isOwner}
-          onManage={() =>
-            setEditChannel({ _id: channel._id, name: channel.name, type: "voice" })
-          }
-        />
+        <div key={channel._id}>
+          <ChannelRow
+            to={`/servers/${serverId}/channels/${channel._id}`}
+            prefix="🔊"
+            name={channel.name}
+            active={activeChannelId === channel._id}
+            canManage={isOwner}
+            onManage={() =>
+              setEditChannel({ _id: channel._id, name: channel.name, type: "voice" })
+            }
+          />
+          {/* FR-032: who's currently connected to this voice channel's call. */}
+          {channel.connectedUserIds.length > 0 && (
+            <ul className="mb-1 ml-6 space-y-0.5">
+              {channel.connectedUserIds.map((userId) => (
+                <li key={userId} className="truncate text-xs text-gray-400">
+                  <span className="mr-1 text-online">●</span>
+                  {nameByUserId.get(userId) ?? "Someone"}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       ))}
 
       {showInvite && (

@@ -1,6 +1,7 @@
 import { auth } from "../auth";
 import type { Doc, Id } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
+import type { CallScope } from "./scope";
 
 type Ctx = QueryCtx | MutationCtx;
 
@@ -83,6 +84,23 @@ export async function requireChannelMembership(
   }
   const membership = await requireServerMembership(ctx, channel.serverId);
   return { userId: membership.userId, channel };
+}
+
+/**
+ * Confirms the caller may access a call scope: server membership for a
+ * channel scope, thread participancy for a thread scope (FR-033). Returns
+ * the caller's user ID. Reused by calls.ts and callParticipants.ts so every
+ * call entry point runs the same authorization.
+ */
+export async function requireScopeAccess(
+  ctx: Ctx,
+  scope: CallScope,
+): Promise<Id<"users">> {
+  if (scope.kind === "channel") {
+    const { userId } = await requireChannelMembership(ctx, scope.channelId);
+    return userId;
+  }
+  return await requireThreadParticipant(ctx, scope.threadId);
 }
 
 export async function requireCallParticipant(

@@ -154,17 +154,17 @@ independently *buildable* before US2.
 
 ### Implementation for User Story 3
 
-- [ ] T042 [US3] `calls.ts`: `getActiveForScope` query + `getOrCreateActiveForScope` internal mutation in `convex/calls.ts` (FR-026)
-- [ ] T043 [US3] `callParticipants.ts`: `join`, `leave`, `heartbeat`, `setMicCamera` mutations + `list` query in `convex/callParticipants.ts` (FR-026, FR-027, FR-028, FR-031); `leave` MUST use `callState.ts` (T011) to detect when it empties the call and, if so, set `calls.endedAt` AND delete that call's remaining `signals` rows immediately in the same mutation — not deferred to the T045 cron, per data-model.md's "immediately on call end" lifecycle note
-- [ ] T044 [US3] `signals.ts`: `send` mutation + `listInbox` query with `since` cursor in `convex/signals.ts`
-- [ ] T045 [US3] Add `sweepStaleCallParticipants` scheduled mutation to `convex/crons.ts` (grace-period cleanup, closes emptied calls, deletes remaining signals — FR-031a)
-- [ ] T046 [P] [US3] `RTCPeerConnection` factory + Perfect Negotiation handshake (polite/impolite roles, `makingOffer`/`ignoreOffer` glare handling, `restartIce()` on `connectionState === "failed"`) in `src/lib/webrtc/peerConnection.ts` (research.md §2a)
-- [ ] T047 [US3] `useCall` hook in `src/hooks/useCall.ts`: orchestrates `callParticipants.join`/`leave`/`heartbeat`, diffs `callParticipants.list` to open/close per-peer connections via T046, drives `signals.send`/`listInbox` with a locally-tracked `since` cursor
-- [ ] T048 [P] [US3] Local speaking detector (Web Audio `AnalyserNode` per remote track, no Convex writes) in `src/lib/webrtc/speakingDetector.ts` (FR-030)
-- [ ] T049 [US3] Voice channel panel, video tiles, and call controls in `src/components/calls/VoiceChannelPanel.tsx`, `VideoTile.tsx`, `CallControls.tsx` (FR-028, FR-029, FR-030, FR-031)
-- [ ] T050 [US3] Update `src/components/channels/ChannelList.tsx` (from US1/T029) to show connected members per voice channel via `channels.list`'s `connectedUserIds` (FR-032)
-- [ ] T051 [P] [US3] Unit tests for `convex/lib/callState.ts` transitions in `tests/unit/callState.test.ts` (Vitest — Testable Seams)
-- [ ] T052 [US3] Constitution-mandated smoke test for the join-call flow in `tests/smoke/join-call.smoke.test.tsx` (`convex-test`, exercises the real `callParticipants.join` mutation and resulting participant list, not a mock)
+- [X] T042 [US3] `calls.ts`: `getActiveForScope` query + `getOrCreateActiveForScope` internal mutation in `convex/calls.ts` (FR-026)
+- [X] T043 [US3] `callParticipants.ts`: `join`, `leave`, `heartbeat`, `setMicCamera` mutations + `list` query in `convex/callParticipants.ts` (FR-026, FR-027, FR-028, FR-031); `leave` MUST use `callState.ts` (T011) to detect when it empties the call and, if so, set `calls.endedAt` AND delete that call's remaining `signals` rows immediately in the same mutation — not deferred to the T045 cron, per data-model.md's "immediately on call end" lifecycle note
+- [X] T044 [US3] `signals.ts`: `send` mutation + `listInbox` query with `since` cursor in `convex/signals.ts`
+- [X] T045 [US3] Add `sweepStaleCallParticipants` scheduled mutation to `convex/crons.ts` (grace-period cleanup, closes emptied calls, deletes remaining signals — FR-031a)
+- [X] T046 [P] [US3] `RTCPeerConnection` factory + Perfect Negotiation handshake (polite/impolite roles, `makingOffer`/`ignoreOffer` glare handling, `restartIce()` on `connectionState === "failed"`) in `src/lib/webrtc/peerConnection.ts` (research.md §2a)
+- [X] T047 [US3] `useCall` hook in `src/hooks/useCall.ts`: orchestrates `callParticipants.join`/`leave`/`heartbeat`, diffs `callParticipants.list` to open/close per-peer connections via T046, drives `signals.send`/`listInbox` with a locally-tracked `since` cursor
+- [X] T048 [P] [US3] Local speaking detector (Web Audio `AnalyserNode` per remote track, no Convex writes) in `src/lib/webrtc/speakingDetector.ts` (FR-030)
+- [X] T049 [US3] Voice channel panel, video tiles, and call controls in `src/components/calls/VoiceChannelPanel.tsx`, `VideoTile.tsx`, `CallControls.tsx` (FR-028, FR-029, FR-030, FR-031)
+- [X] T050 [US3] Update `src/components/channels/ChannelList.tsx` (from US1/T029) to show connected members per voice channel via `channels.list`'s `connectedUserIds` (FR-032)
+- [X] T051 [P] [US3] Unit tests for `convex/lib/callState.ts` transitions in `tests/unit/callState.test.ts` (Vitest — Testable Seams)
+- [X] T052 [US3] Constitution-mandated smoke test for the join-call flow in `tests/smoke/join-call.smoke.test.tsx` (`convex-test`, exercises the real `callParticipants.join` mutation and resulting participant list, not a mock)
 
 **Checkpoint**: User Stories 1–3 all independently functional, including the
 4-participant/reject-at-5 validation above. Per constitution Definition of

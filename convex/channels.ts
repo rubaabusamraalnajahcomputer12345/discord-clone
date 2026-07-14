@@ -5,10 +5,9 @@ import type { Id } from "./_generated/dataModel";
 import { requireServerMembership, requireServerOwner } from "./lib/authz";
 import { validateChannelName } from "./lib/validators";
 
-// FR-012: list a server's channels. `connectedUserIds` is a real,
-// live-populated field starting in US3 (T050) once calls/callParticipants
-// exist; this phase only needs channels to be visible, so it's a
-// static empty array here.
+// FR-012, FR-032: list a server's channels. For each voice channel, attach
+// the user IDs currently connected to its active call so the sidebar can show
+// who's in each voice room live (text channels always get an empty array).
 export const list = query({
   args: { serverId: v.id("servers") },
   handler: async (ctx, { serverId }) => {
@@ -17,10 +16,26 @@ export const list = query({
       .query("channels")
       .withIndex("by_server", (q) => q.eq("serverId", serverId))
       .collect();
-    return channels.map((channel) => ({
-      ...channel,
-      connectedUserIds: [] as Id<"users">[],
-    }));
+    return await Promise.all(
+      channels.map(async (channel) => {
+        let connectedUserIds: Id<"users">[] = [];
+        if (channel.type === "voice") {
+          const activeCall = await ctx.db
+            .query("calls")
+            .withIndex("by_channel", (q) => q.eq("scope.channelId", channel._id))
+            .filter((q) => q.eq(q.field("endedAt"), undefined))
+            .first();
+          if (activeCall !== null) {
+            const participants = await ctx.db
+              .query("callParticipants")
+              .withIndex("by_call", (q) => q.eq("callId", activeCall._id))
+              .collect();
+            connectedUserIds = participants.map((p) => p.userId);
+          }
+        }
+        return { ...channel, connectedUserIds };
+      }),
+    );
   },
 });
 
