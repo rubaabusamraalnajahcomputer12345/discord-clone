@@ -208,7 +208,7 @@ typecheck` (zero errors) and the full Vitest suite before moving to Polish.
 - [X] T058 [P] `npm run typecheck` (`tsc --noEmit`) across `src/` and `convex/` with zero errors (Type Safety End-to-End gate)
 - [X] T059 Cross-check every mutation/query in contracts/convex-api.md against its actual `convex/lib/authz.ts` usage — no function skips the shared authorization helper (Security Basics gate)
 - [X] T060 [P] Add in-UI messaging for call-connection failure (STUN-only/no-TURN limitation from plan.md Constraints) so strict-NAT failures are explained, not silent
-- [ ] T061 Run the SC-009 scale check from quickstart.md's non-functional checks (several dozen concurrent sessions across a handful of servers); confirm SC-002/SC-003/SC-005 latency targets still hold under that load, not just in the 2-4-user story walkthroughs
+- [X] T061 Run the SC-009 scale check from quickstart.md's non-functional checks (several dozen concurrent sessions across a handful of servers); confirm SC-002/SC-003/SC-005 latency targets still hold under that load, not just in the 2-4-user story walkthroughs (see validation-results.md; scripts/scaleProbe.mjs — ~200ms p95, flat under concurrent writes)
 
 ---
 
