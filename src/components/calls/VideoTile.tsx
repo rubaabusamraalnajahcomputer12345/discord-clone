@@ -11,6 +11,7 @@ export function VideoTile({
   micOn,
   cameraOn,
   isLocal,
+  connectionState,
 }: {
   displayName: string;
   avatarUrl: string;
@@ -18,6 +19,7 @@ export function VideoTile({
   micOn: boolean;
   cameraOn: boolean;
   isLocal: boolean;
+  connectionState?: RTCPeerConnectionState;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [speaking, setSpeaking] = useState(false);
@@ -41,6 +43,12 @@ export function VideoTile({
 
   const showVideo = cameraOn && stream != null && stream.getVideoTracks().length > 0;
 
+  // T060: a remote peer stuck in failed/disconnected almost always means the
+  // STUN-only setup couldn't punch through NAT (no TURN relay is provisioned).
+  // Surface it on the tile instead of leaving a silently frozen/blank video.
+  const failed =
+    connectionState === "failed" || connectionState === "disconnected";
+
   return (
     <div
       className={`relative flex aspect-video items-center justify-center overflow-hidden rounded-lg bg-black/60 ${
@@ -57,6 +65,17 @@ export function VideoTile({
         />
       ) : (
         <img src={avatarUrl} alt="" className="h-16 w-16 rounded-full" />
+      )}
+      {failed && !isLocal && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 bg-black/70 px-3 text-center">
+          <span className="text-sm font-medium text-danger">
+            Connection lost
+          </span>
+          <span className="text-xs text-gray-300">
+            Reconnecting… this can fail on restrictive networks (STUN-only, no
+            TURN relay).
+          </span>
+        </div>
       )}
       <div className="absolute bottom-1 left-1 flex items-center gap-1 rounded bg-black/60 px-2 py-0.5 text-xs text-white">
         {!micOn && <span title="Muted">🔇</span>}

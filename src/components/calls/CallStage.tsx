@@ -42,6 +42,9 @@ export function CallStage({
               micOn={isLocal ? call.micOn : participant.micOn}
               cameraOn={isLocal ? call.cameraOn : participant.cameraOn}
               isLocal={isLocal}
+              connectionState={
+                isLocal ? undefined : call.peerStates[participant.userId as string]
+              }
             />
           );
         })}

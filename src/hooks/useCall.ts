@@ -25,6 +25,8 @@ export interface UseCallResult {
   currentUserId: Id<"users"> | null;
   localStream: MediaStream | null;
   remoteStreams: Record<string, MediaStream>;
+  /** Per-peer RTCPeerConnection state, keyed by the remote user id. */
+  peerStates: Record<string, RTCPeerConnectionState>;
   micOn: boolean;
   cameraOn: boolean;
   connecting: boolean;
@@ -48,6 +50,7 @@ export function useCall(scope: CallScope | null): UseCallResult {
   const [callId, setCallId] = useState<Id<"calls"> | null>(null);
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   const [remoteStreams, setRemoteStreams] = useState<Record<string, MediaStream>>({});
+  const [peerStates, setPeerStates] = useState<Record<string, RTCPeerConnectionState>>({});
   const [micOn, setMicOn] = useState(true);
   const [cameraOn, setCameraOn] = useState(false);
   const [connecting, setConnecting] = useState(false);
@@ -112,6 +115,9 @@ export function useCall(scope: CallScope | null): UseCallResult {
         onRemoteStream: (stream) => {
           setRemoteStreams((prev) => ({ ...prev, [key]: stream }));
         },
+        onConnectionStateChange: (state) => {
+          setPeerStates((prev) => ({ ...prev, [key]: state }));
+        },
       });
       peersRef.current.set(key, handle);
       return handle;
@@ -125,6 +131,7 @@ export function useCall(scope: CallScope | null): UseCallResult {
     }
     peersRef.current.clear();
     setRemoteStreams({});
+    setPeerStates({});
     processedSignalIds.current.clear();
   }, []);
 
@@ -218,6 +225,11 @@ export function useCall(scope: CallScope | null): UseCallResult {
           delete next[key];
           return next;
         });
+        setPeerStates((prev) => {
+          const next = { ...prev };
+          delete next[key];
+          return next;
+        });
       }
     }
     // participants is derived fresh each render; guarded by callId/localStream.
@@ -306,6 +318,7 @@ export function useCall(scope: CallScope | null): UseCallResult {
     currentUserId: myUserId,
     localStream,
     remoteStreams,
+    peerStates,
     micOn,
     cameraOn,
     connecting,
