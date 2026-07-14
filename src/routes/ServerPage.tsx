@@ -22,8 +22,14 @@ export function ServerPage() {
 
   if (!serverId) {
     return (
-      <div className="flex h-full items-center justify-center text-offline">
-        Select a server
+      <div className="flex h-full">
+        <ServerRail />
+        <div className="flex flex-1 flex-col items-center justify-center text-offline">
+          <p className="mb-1 text-lg font-medium text-gray-300">No server selected</p>
+          <p className="text-sm">
+            Pick a server on the left, or press <span className="text-online">+</span> to create one.
+          </p>
+        </div>
       </div>
     );
   }

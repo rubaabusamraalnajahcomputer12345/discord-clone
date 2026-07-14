@@ -121,12 +121,12 @@ immediately (spec.md Independent Test, US2).
 
 ### Implementation for User Story 2
 
-- [ ] T036 [P] [US2] `servers.ts`: `rename`, `leave` (cascading full-server delete, FR-010a), `removeMember` mutations in `convex/servers.ts` (FR-008, FR-009, FR-010)
-- [ ] T037 [P] [US2] `channels.ts`: `create`, `rename`, `remove` mutations (cascading message + call deletion) in `convex/channels.ts` (FR-011, FR-013, FR-014, FR-015)
-- [ ] T038 [US2] Server settings modal (rename, leave) in `src/components/servers/ServerSettingsModal.tsx` (FR-008)
-- [ ] T039 [US2] Channel settings modal (create/rename/delete, text + voice) in `src/components/channels/ChannelSettingsModal.tsx` (FR-011, FR-013, FR-014)
-- [ ] T040 [US2] Member removal UI + owner-only action gating in `src/components/members/MemberItem.tsx` (update), `src/components/members/MemberActions.tsx` (FR-009, FR-010, FR-015)
-- [ ] T041 [P] [US2] Unit tests for owner-only authorization paths in `tests/unit/authz.test.ts` (Vitest)
+- [X] T036 [P] [US2] `servers.ts`: `rename`, `leave` (cascading full-server delete, FR-010a), `removeMember` mutations in `convex/servers.ts` (FR-008, FR-009, FR-010)
+- [X] T037 [P] [US2] `channels.ts`: `create`, `rename`, `remove` mutations (cascading message + call deletion) in `convex/channels.ts` (FR-011, FR-013, FR-014, FR-015)
+- [X] T038 [US2] Server settings modal (rename, leave) in `src/components/servers/ServerSettingsModal.tsx` (FR-008)
+- [X] T039 [US2] Channel settings modal (create/rename/delete, text + voice) in `src/components/channels/ChannelSettingsModal.tsx` (FR-011, FR-013, FR-014)
+- [X] T040 [US2] Member removal UI + owner-only action gating in `src/components/members/MemberItem.tsx` (update), `src/components/members/MemberActions.tsx` (FR-009, FR-010, FR-015)
+- [X] T041 [P] [US2] Unit tests for owner-only authorization paths in `tests/unit/authz.test.ts` (Vitest)
 
 **Checkpoint**: User Stories 1 and 2 both work independently; a voice
 channel now exists as a fixture for US3. Per constitution Definition of

@@ -1,4 +1,4 @@
-import { useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { MemberItem } from "./MemberItem";
@@ -6,8 +6,18 @@ import { MemberItem } from "./MemberItem";
 export function MemberList({ serverId }: { serverId: Id<"servers"> }) {
   const members = useQuery(api.serverMembers.list, { serverId });
   const presence = useQuery(api.presence.listForServer, { serverId });
+  const currentUser = useQuery(api.users.getCurrentUser);
+  const removeMember = useMutation(api.servers.removeMember);
 
   const onlineByUserId = new Map((presence ?? []).map((p) => [p.userId, p.online]));
+
+  // The current user can manage the roster only if they are this server's
+  // owner (a member row flagged isOwner whose userId matches them).
+  const isCurrentUserOwner =
+    currentUser != null &&
+    (members ?? []).some(
+      (member) => member.userId === currentUser._id && member.isOwner,
+    );
 
   return (
     <aside className="w-60 shrink-0 overflow-y-auto bg-surface-sidebar p-3">
@@ -21,6 +31,10 @@ export function MemberList({ serverId }: { serverId: Id<"servers"> }) {
           avatarUrl={member.avatarUrl}
           isOwner={member.isOwner}
           online={onlineByUserId.get(member.userId) ?? false}
+          canManage={isCurrentUserOwner && !member.isOwner}
+          onRemove={async () => {
+            await removeMember({ serverId, userId: member.userId });
+          }}
         />
       ))}
     </aside>
