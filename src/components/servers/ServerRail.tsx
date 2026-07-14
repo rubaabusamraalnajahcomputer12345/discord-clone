@@ -11,6 +11,14 @@ export function ServerRail() {
 
   return (
     <nav className="flex w-[72px] shrink-0 flex-col items-center gap-2 bg-surface-rail py-3">
+      <Link
+        to="/dm"
+        title="Direct messages"
+        className="flex h-12 w-12 items-center justify-center rounded-2xl bg-surface-panel text-lg text-gray-200 hover:bg-accent hover:text-white"
+      >
+        💬
+      </Link>
+      <div className="my-1 h-0.5 w-8 rounded-full bg-black/30" />
       {servers?.map((server) => (
         <Link
           key={server._id}

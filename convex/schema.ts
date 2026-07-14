@@ -77,7 +77,14 @@ export default defineSchema({
     userAId: v.id("users"), // lower of the two user IDs (canonical order)
     userBId: v.id("users"), // higher of the two user IDs
     createdAt: v.number(),
-  }).index("by_participants", ["userAId", "userBId"]),
+  })
+    .index("by_participants", ["userAId", "userBId"])
+    // by_participants' `userAId` prefix already lists threads where the caller
+    // is user A; this second index covers the user-B side so
+    // `listForCurrentUser` can find all of a user's threads via two indexed
+    // lookups instead of an unindexed scan (data-model.md listed only
+    // by_participants, which is insufficient for the per-user listing query).
+    .index("by_userB", ["userBId"]),
 
   directMessages: defineTable({
     threadId: v.id("directMessageThreads"),

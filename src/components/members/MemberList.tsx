@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from "convex/react";
+import { useNavigate } from "react-router-dom";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { MemberItem } from "./MemberItem";
@@ -8,6 +9,8 @@ export function MemberList({ serverId }: { serverId: Id<"servers"> }) {
   const presence = useQuery(api.presence.listForServer, { serverId });
   const currentUser = useQuery(api.users.getCurrentUser);
   const removeMember = useMutation(api.servers.removeMember);
+  const openDm = useMutation(api.directMessageThreads.getOrCreate);
+  const navigate = useNavigate();
 
   const onlineByUserId = new Map((presence ?? []).map((p) => [p.userId, p.online]));
 
@@ -35,6 +38,14 @@ export function MemberList({ serverId }: { serverId: Id<"servers"> }) {
           onRemove={async () => {
             await removeMember({ serverId, userId: member.userId });
           }}
+          onMessage={
+            currentUser && member.userId !== currentUser._id
+              ? async () => {
+                  const threadId = await openDm({ otherUserId: member.userId });
+                  navigate(`/dm/${threadId}`);
+                }
+              : undefined
+          }
         />
       ))}
     </aside>

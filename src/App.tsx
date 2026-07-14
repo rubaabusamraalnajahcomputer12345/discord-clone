@@ -4,16 +4,8 @@ import { LoginPage } from "./routes/LoginPage";
 import { JoinInvitePage } from "./routes/JoinInvitePage";
 import { ProfileSettingsPage } from "./routes/ProfileSettingsPage";
 import { ServerPage } from "./routes/ServerPage";
+import { DmPage } from "./routes/DmPage";
 import { usePresenceHeartbeat } from "./hooks/usePresenceHeartbeat";
-
-// DM view is built in US4 — placeholder until then.
-function DmViewPlaceholder() {
-  return (
-    <div className="flex h-full items-center justify-center">
-      Direct messages (built in US4)
-    </div>
-  );
-}
 
 export default function App() {
   usePresenceHeartbeat();
@@ -27,7 +19,8 @@ export default function App() {
         <Route path="/servers/:serverId/channels/:channelId" element={<ServerPage />} />
         <Route path="/invite/:inviteCode" element={<JoinInvitePage />} />
         <Route path="/profile" element={<ProfileSettingsPage />} />
-        <Route path="/dm/:threadId" element={<DmViewPlaceholder />} />
+        <Route path="/dm" element={<DmPage />} />
+        <Route path="/dm/:threadId" element={<DmPage />} />
       </Route>
     </Routes>
   );

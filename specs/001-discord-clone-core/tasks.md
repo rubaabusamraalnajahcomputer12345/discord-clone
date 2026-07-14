@@ -189,10 +189,10 @@ infrastructure (T042–T048).
 
 ### Implementation for User Story 4
 
-- [ ] T053 [US4] `directMessageThreads.ts`: `getOrCreate` mutation (validates the two users share ≥1 server) + `listForCurrentUser` query in `convex/directMessageThreads.ts` (FR-023)
-- [ ] T054 [US4] `directMessages.ts`: `send`/`edit`/`remove` mutations + `listPage` paginated query with denormalized author fields in `convex/directMessages.ts` (FR-024, FR-025)
-- [ ] T055 [US4] DM list + thread view in `src/components/dm/DmList.tsx`, `DmThreadView.tsx` (reuses `MessageList`/`MessageItem`/`MessageComposer` patterns from US1) (FR-023, FR-025)
-- [ ] T056 [US4] Wire a "start call" entry point from the DM thread, reusing `callParticipants.join`/`useCall` with a thread scope, in `src/components/dm/DmThreadView.tsx` (update), `src/components/calls/CallControls.tsx` (update) (FR-033)
+- [X] T053 [US4] `directMessageThreads.ts`: `getOrCreate` mutation (validates the two users share ≥1 server) + `listForCurrentUser` query in `convex/directMessageThreads.ts` (FR-023)
+- [X] T054 [US4] `directMessages.ts`: `send`/`edit`/`remove` mutations + `listPage` paginated query with denormalized author fields in `convex/directMessages.ts` (FR-024, FR-025)
+- [X] T055 [US4] DM list + thread view in `src/components/dm/DmList.tsx`, `DmThreadView.tsx` (reuses `MessageList`/`MessageItem`/`MessageComposer` patterns from US1) (FR-023, FR-025)
+- [X] T056 [US4] Wire a "start call" entry point from the DM thread, reusing `callParticipants.join`/`useCall` with a thread scope, in `src/components/dm/DmThreadView.tsx` (update), `src/components/calls/CallControls.tsx` (update) (FR-033)
 
 **Checkpoint**: All four user stories independently functional — full spec
 scope delivered. Per constitution Definition of Done: run `npm run
